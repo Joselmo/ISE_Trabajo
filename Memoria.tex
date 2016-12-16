@@ -9,10 +9,9 @@
 \textsc{\textbf{Ingeniería de Servidores (2016-2017)} \\ Grado en Ingeniería Informática \\ Universidad de Granada} \\ [25pt] % Your university, school and/or department name(s)
 \horrule{0.5pt} \\[0.4cm] % Thin top horizontal rule
 \huge Memoria \\ % The assignment title
+systemd
 \horrule{2pt} \\[0.5cm] % Thick bottom horizontal rule
 }
-
-\author{Elena María Gómez Ríos y Jose Luis Martínez Ortiz} % Nombre y apellidos
 
 \date{\normalsize\today} % Incluye la fecha actual
 
@@ -24,41 +23,38 @@
 
 \maketitle % Muestra el Título
 
-\newpage %inserta un salto de página
-
-\tableofcontents % para generar el índice de contenidos
-
-\listoffigures
-
-\listoftables
-
-\newpage
-
-%\textbf{NOTA: en caso de problema al compilar, compruebe que tiene el paquete: texlive-babel-spanish.noarch }  \\
- 
 \newpage
 
 %----------------------------------------------------------------------------------------
 %	Resumen introductorio
 %----------------------------------------------------------------------------------------
 
-\section{Resumen}
-
+\section{Resumen}% Entre 5 y 10 lineas
+En el mundo de \textit{UNIX} donde cada parte del kernel está público y 
+cada vez es más grande la comunidad que desarrolla nuevas tecnologías 
+para mejorar el sistema \textit{UNIX}, en nuestro caso vamos a analizar
+una tecnología que rápidamente ha sido adaptada por las principales 
+distribuciones de \textit{UNIX}, systemd. Se explicará en que consiste esta 
+tecnología y sus ventajas e inconvenientes. Además examinaremos la
+ implementación de systemd para saber un poco más sobre como funciona.
 
 %----------------------------------------------------------------------------------------
 %	Introducción
 %----------------------------------------------------------------------------------------
 
-\section{Introducción}
+\section{Introducción} % máximo 2 páginas
 
 
 %----------------------------------------------------------------------------------------
 %	Systemd
 %----------------------------------------------------------------------------------------
 
-\section{Systemd}
-
-
+\section{Systemd} % máximo 10 páginas
+\subsection{¿Qué es systemd?}
+Tal como la definen los autores en la web oficial de systemd \cite{systemd}
+es una suite o conjunto de herramientas diseñadas para ofrecer una 
+funcionalidad específica, en este caso para facilitar y mejorar el arranque
+del sistema operativo \textit{UNIX}
 %----------------------------------------------------------------------------------------
 %	Conclusiones
 %----------------------------------------------------------------------------------------
@@ -70,27 +66,6 @@
 \includegraphics[scale=0.4]{./imagenes/P3_4_1.png} 
 \caption{Informe del monitor de rendimiento - resumen} \label{fig:P3_4_1}
 \end{figure}
-
-
-%----------------------------------------------------------------------------------------
-%	Tareas extra
-%----------------------------------------------------------------------------------------
-\section{Tareas extra.}
-
-
-\subsection{Instalación y utilización de lm-sensors}
-Para probar el software que se indica en el guión de prácticas \textit{lm-sensor} consulto 
-la wiki de Arch \cite{lmSensor}, ya que la web indicada en el guión no esta operativa.
-Lo realizo sobre mi propio equipo ya que en las máquinas virtuales no cuentan con los sensores de
-las BIOS.
-Como se puede ver en la imagen \ref{fig:P3_E2_1} ya tengo instalado el software. Ahora paso a 
-configurar a que sensores de mi equipo le doy acceso para monitorizar (figura \ref{fig:P3_E2_2}).
-Una vez configurado los permisos ya podemos ver la información mediante el comando \textit{sensors},
-tal como se ve en la figura \ref{fig:P3_E2_3}.\\
-
-Podemos ver como la temperatura de los ``cores'' esta en valores normales, además nos indica que por
-encima de 81º es una temperatura alta y por encima de los 105º ya es critica. También nos informa de la
-velocidad del ventilador del equipo, en nuestro caso esta funcionando a 27000 rpm (revoluciones por minuto)
 
 
 
