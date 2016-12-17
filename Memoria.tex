@@ -8,8 +8,7 @@
 \normalfont \normalsize 
 \textsc{\textbf{Ingeniería de Servidores (2016-2017)} \\ Grado en Ingeniería Informática \\ Universidad de Granada} \\ [25pt] % Your university, school and/or department name(s)
 \horrule{0.5pt} \\[0.4cm] % Thin top horizontal rule
-\huge Memoria \\ % The assignment title
-systemd
+\huge systemd \\ % The assignment title
 \horrule{2pt} \\[0.5cm] % Thick bottom horizontal rule
 }
 
@@ -30,7 +29,7 @@ systemd
 %----------------------------------------------------------------------------------------
 
 \section{Resumen}% Entre 5 y 10 lineas
-En el mundo de \textit{UNIX} donde cada parte del kernel está público y 
+En el mundo de \textit{UNIX} donde el kernel está público y 
 cada vez es más grande la comunidad que desarrolla nuevas tecnologías 
 para mejorar el sistema \textit{UNIX}, en nuestro caso vamos a analizar
 una tecnología que rápidamente ha sido adaptada por las principales 
@@ -43,6 +42,49 @@ tecnología y sus ventajas e inconvenientes. Además examinaremos la
 %----------------------------------------------------------------------------------------
 
 \section{Introducción} % máximo 2 páginas
+En los sistemas de tipo \textit{UNIX}, concedidos al principio de la decada
+de los 70, como se indica en la historia de The Open Group \cite{unix}, 
+se ideo de forma gratuita y libre. Fomentando la idea de software libre
+y de código abierto y creando la comunidad tan grande y amplia que conocemos 
+que conocemos hoy en día. Gracias a esta comunidad se ha seguido
+desarrollando y avanzando el sistema \textit{UNIX} hasta el kernel de 
+\textit{Linux} que conocemos y utilizamos a diario. Constantemente se están
+desarrollando nuevas tecnologías y procesos para mejorar el sistema.
+
+Nosotros nos vamos a centrar en una nueva versión de unos de los procesos
+principales del sistema y que curiosamente se ha mantenido casi intacto 
+desde la década de los noventa, es decir, desde hace más de 25 años no
+ha sido modificado, echo sorprendente pensando en la velocidad que avanza
+siempre la tecnología. El proceso en cuestión es el encargado del inicio 
+del sistema, el proceso con PID (Proccess ID) 1, el arranque del sistema 
+lo hace ejecutando todos los demás procesos como los drivers del adaptador
+de red o del ratón, los controladores de pantalla, etc. 
+
+Hasta hace relativamente poco todos los sistemas basados en Linux 
+utilizaban en su kernel el proceso \textit{init.d}. Init.d se caracterizaba
+por su simpleza y facilidad de uso. El funcionamiento de init.d consiste
+en ir iniciando los procesos listados en un archivo de configuración, 
+es decir, inicia el primer proceso de la lista y cuando este se ha iniciado
+inicia el siguiente y así sucesivamente. De esta forma tan simple se
+iniciaba el sistema. Además utiliza la filosofía del software libre de 
+ser transparente para el usuario y permitirle poder modificar por completo
+su implementación, ya que bastaba con modificar el fichero de configuración.
+
+Pero tenia unos claros inconvenientes, primero las dependencias
+deben controlarse por parte del programador que tiene que saber que procesos
+van han de iniciarse primero y cuales después, por ejemplo si en el listado
+de procesos aparece un proceso apache que depende de la configuración de
+red este proceso se iniciará con errores o no se iniciará puesto que el 
+controlador de red todavía no se ha iniciado, aun cuando apache este 
+perfectamente configurado y el controlador de red también. El otro
+problema principal era la sobrecarga al inicio del sistema, ya que se 
+iniciaban los procesos de uno en uno y hasta que uno no acabase de arrancar
+no se iniciaba el siguiente.
+
+Por ello Lennart Poettering, como redacta en su articulo \cite{Lennart} y
+Kay Sievers decidieron desarrollar uno proceso nuevo de arranque del
+sistema, desarrollando así \textit{systemd}.
+
 
 
 %----------------------------------------------------------------------------------------
@@ -54,7 +96,22 @@ tecnología y sus ventajas e inconvenientes. Además examinaremos la
 Tal como la definen los autores en la web oficial de systemd \cite{systemd}
 es una suite o conjunto de herramientas diseñadas para ofrecer una 
 funcionalidad específica, en este caso para facilitar y mejorar el arranque
-del sistema operativo \textit{UNIX}
+del sistema operativo \textit{UNIX}. Específicamente es un conjunto de demonios de \textit{UNIX}, un demonio \cite{daemons} es un proceso que
+funciona en segundo plano en el sistema a la espera de eventos o llamadas
+que se producen en el sistema y cuando son despertados realizan una tarea 
+concreta. 
+
+
+
+\subsection{Historia}
+
+\subsubsection{Sobre su creador}
+
+\subsection{Funcionamiento}
+
+\subsection{Implementación}
+
+\subsection{Conclusiones}
 %----------------------------------------------------------------------------------------
 %	Conclusiones
 %----------------------------------------------------------------------------------------
