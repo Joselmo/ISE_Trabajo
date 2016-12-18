@@ -64,6 +64,14 @@ Tal como se dice en el artículo de Jonas Gorauskas en ``Linux Jornal'' \cite{Sy
 	
 \subsubsection{Problemas de System V}
 System V presenta una serie de problemas debido a como fue concebido, ya que se pensó para equipos estáticos y que mantenían su hardware, por ello se desarrollo de forma estática y síncrona para el arranque y apagado del sistema, dando lugar a bloqueos de tareas futuras hasta que las actuales no fueran completadas. Esto deja al sistema sin poder reaccionar ante algunos eventos que no estaban programados para el inicio o apagado del sistema. Además no había un control sobre los demonios una vez ejecutados, si estos tenían cualquier problema durante su ejecución no eran tratados por nadie, como mucho si se quedaban huérfanos los recogía el proceso \texttt{init}, pero si se paraban no volvía a lanzarlos aunque fueran procesos importantes o vitales para el sistema.
+
+\begin{figure}[H] %con el [H] le obligamos a situar aquí la figura
+\centering
+\includegraphics[scale=0.4]{./imagenes/System_V.png} 
+\caption{System V - boot process} \label{fig:System_V}
+\end{figure}
+
+Como se puede observar en la figura \ref{fig:System_V} el proceso de arranque del sistema empieza en las BIOS, continuando por la llamada al GRUB que seleccionando un sistema operativo carga el Kernel. En el caso de sistemas Linux con \texttt{System V init} primero leería el fichero de configuración inittab, en el cual se indica el esquema que debe seguir los niveles de ejecución del proceso. En este caso hemos utilizado de ejemplo un sistema con 5 niveles.
 %------------------------------------------------------------------------
 %	Systemd
 %-------------------------------------------------------------------------
@@ -75,6 +83,15 @@ El proceso \texttt{systemd} tal como lo definen los autores en la web oficial de
 
 Lennart y Kay diseñaron \texttt{systemd} buscando una mayor eficiencia en el inicio de los sistemas \texttt{Linux}, para ello crearon un \texttt{framework}, un \texttt{framework} en software es una infraestructura estandarizada en resolver un problema específico donde poder expresar todas las dependencias y así poder realizar una mejor gestión de las dependencias. Para conseguir una mayor eficiencia se centraron en el paralelismo frente la ejecución de procesos de forma secuencial que utilizaba su predecesor. Ahora \texttt{systemd} realiza todas las llamadas para el inicio del sistema por lo que se ha eliminado la utilización de una terminal como intermediario, ahorrando tiempo en el inicio del sistema. El \texttt{framework} de dependencias es mucho más permisivo ya que es capaz de controlarlas a un nivel más bajo consiguiendo de esta forma ser mucho más agresivo en la paralelización del inicio del sistema. Además permite al administrador del sistema un mayor control sobre el orden en que se inician los servicios.\\
 
+
+En el artículo de ZDNet \cite{zdnet} podemos ver un esquema de los componentes de systemd como se muestra en la figura \ref{fig:systemd_components}. Se pueden observar los cinco grande módulos en los que se divide la suite \texttt{systemd}: Libraries, Core, Targets, Daemons y Utilities.
+
+\begin{figure}[H] %con el [H] le obligamos a situar aquí la figura
+\centering
+\includegraphics[scale=0.5]{./imagenes/systemd_components.png} 
+\caption{Componentes de systemd} \label{fig:systemd_components}
+\end{figure}
+
 Para la resolución de dependencias se fijaron en su problema más fundamental, la utilización de servicios y comunicaciones con otros procesos. Para las comunicaciones se sirven normalmente de los \texttt{sockets}, un \texttt{socket} no es más que una estructura de datos del sistema de archivos para el intercambio de información entre procesos de un sistema \texttt{Linux}, como indica el manual (\texttt{man}) de \texttt{Linux} \cite{socket}. De esta forma se pueden iniciar todos los demás procesos de forma paralela teniendo en cuenta menos dependencias puesto que al estar los \texttt{sockets} ya creados pueden empezar la comunicación aunque alguno de los dos procesos todavía no este iniciado. Por ejemplo los procesos que necesitan escribir en los ``logs'' del sistema dependen del \texttt{socket} ``/dev/log'', entonces \texttt{systemd} crea este \texttt{socket} de los primeros, eliminando así múltiples dependencias y bloqueos a otros servicios por consecuencia de las dependencias. De esta forma se consigue que aunque el proceso no se haya iniciado, el \texttt{socket} donde tiene que leer ya esté cargado con la información necesaria y así cuando el proceso se inicie cargarla directamente. \\
 
 Las dependencias que se mantienen después de las mejoras previamente descritas se resuelven con un sistema de ``\texttt{target}'', si en \texttt{System V} teníamos un esquema de jerarquía con niveles de ejecución en \texttt{systemd} tenemos algo parecido que sirve al mismo propósito. Como se dice en ArchLinux Wiki \cite{systemd_es}: ``\textit{Cada target se nomina, en lugar de numerarse, y está destinado a servir a un propósito específico con la posibilidad de realizar más de una acción al mismo tiempo. Algunos targets son activados heredando todos los servicios de otro target e implementando servicios adicionales. Como hay targets de systemd que imitan los runlevels de SystemV init, es, por tanto, posible pasar de un target a otro...}''.\\
@@ -83,27 +100,62 @@ Las dependencias que se mantienen después de las mejoras previamente descritas 
 La suite de \texttt{systemd} como comentamos anteriormente trae una serie de herramientas orientadas a mejorar el sistema y las opciones que puede realizar el usuario final, tal como se indican en la wiki de ArchLinux \cite{systemd_es} y en la documentación de ``SUSE'' \cite{suse_doc} incluye los demonios para el control de sesiones (\texttt{logind}), redes (\texttt{networkd}) y los mensajes del sistema (\texttt{journald}). También cuenta con utilidades como un analizador de estado del sistema, que nos muestra de forma cómoda las unidades que han tenido algún tipo de problema o simplemente las unidades instaladas en el sistema. Otra utilidad es la gestión de energía instalada en el paquete de \texttt{logind} que, por ejemplo, permite un apagado o reinicio del sistema.\\
 
 
-\subsection{Demonio Journald}
+Vamos a comentar los principales demonios de systemd:
+
+\subsection{Demonio journald}
 Para conocer un poco más en profundidad sobre este demonio vamos a consultar un articulo en el blog de Lennart \cite{Journald} en el cual se explica lo siguiente. \texttt{Journald} es un demonio incluido en la suite de \texttt{systemd} para la gestión de los mensajes del sistema que cuenta con un nuevo esquema provisto de una estructura de índices. Con esta nueva versión de demonio para los logs se mantiene la compatibilidad con los demonios anteriores y además es más eficiente que su antecesor ya que utiliza la salida estándar junto con las llamadas al sistema de forma nativa en el propio demonio.
 
+\subsection{Demonio logind}
+Este demonio, tal y como se dice en la documentación oficial de systemd \cite{man_systemd_logind}, es el encargado de administrar los inicios de sesión de los usuarios del sistema. Por lo tanto realiza un control de los usuarios y sus sesiones así como de sus procesos. La configuración de este servicio se guarda en \texttt{logind.conf}.
 
+\subsection{Demonio user session}
+Este demonio es el más sencillo, su función es permitir o bloquear los inicios de sesión de usuario dependiendo del estado del sistema \cite{man_systemd_user-sessions}.
 
-\subsection{Funcionamiento}
 
 \subsection{Implementación}
 
-\section{Conclusiones}
+Podemos encontrar la implementación completa de systemd en su GitHub \cite{implementacion_systemd}. Por ejemplo en el archivo \texttt{src/systemd/sd-daemon.h} podemos ver la definición de los niveles de ``logs'' que utiliza el proceso \texttt{systemd}.
+
+\begin{minted}{c}
+/*
+  Log levels for usage on stderr:
+          fprintf(stderr, SD_NOTICE "Hello World!\n");
+  This is similar to printk() usage in the kernel.
+*/
+#define SD_EMERG   "<0>"  /* system is unusable */
+#define SD_ALERT   "<1>"  /* action must be taken immediately */
+#define SD_CRIT    "<2>"  /* critical conditions */
+#define SD_ERR     "<3>"  /* error conditions */
+#define SD_WARNING "<4>"  /* warning conditions */
+#define SD_NOTICE  "<5>"  /* normal but significant condition */
+#define SD_INFO    "<6>"  /* informational */
+#define SD_DEBUG   "<7>"  /* debug-level messages */
+\end{minted}
+
+Se puede observar que se definen ocho niveles de ``logs'', de más prioritario a menos, siendo 0 el más prioritario.
+
+
+%-------------------------------------------------------------------------
+%	Comparativa
+%--------------------------------------------------------------------------
+
+\section{Ventajas e inconvenientes de systemd frente init (system V) } 
+
+\subsection{Ventajas}
+
+
+
+\subsection{Inconvenientes}
+
+ 
+
 %-------------------------------------------------------------------------
 %	Conclusiones
 %--------------------------------------------------------------------------
 
 \section{Conclusiones} % maximo 2 
 
-\begin{figure}[H] %con el [H] le obligamos a situar aquí la figura
-\centering
-\includegraphics[scale=0.4]{./imagenes/P3_4_1.png} 
-\caption{Informe del monitor de rendimiento - resumen} \label{fig:P3_4_1}
-\end{figure}
+
 
 
 

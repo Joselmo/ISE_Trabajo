@@ -1,0 +1,15 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{c+cm}{/*}
+\PYG{c+cm}{  Log levels for usage on stderr:}
+\PYG{c+cm}{          fprintf(stderr, SD\PYGZus{}NOTICE \PYGZdq{}Hello World!\PYGZbs{}n\PYGZdq{});}
+\PYG{c+cm}{  This is similar to printk() usage in the kernel.}
+\PYG{c+cm}{*/}
+\PYG{c+cp}{\PYGZsh{}define SD\PYGZus{}EMERG   \PYGZdq{}\PYGZlt{}0\PYGZgt{}\PYGZdq{}  }\PYG{c+cm}{/* system is unusable */}
+\PYG{c+cp}{\PYGZsh{}define SD\PYGZus{}ALERT   \PYGZdq{}\PYGZlt{}1\PYGZgt{}\PYGZdq{}  }\PYG{c+cm}{/* action must be taken immediately */}
+\PYG{c+cp}{\PYGZsh{}define SD\PYGZus{}CRIT    \PYGZdq{}\PYGZlt{}2\PYGZgt{}\PYGZdq{}  }\PYG{c+cm}{/* critical conditions */}
+\PYG{c+cp}{\PYGZsh{}define SD\PYGZus{}ERR     \PYGZdq{}\PYGZlt{}3\PYGZgt{}\PYGZdq{}  }\PYG{c+cm}{/* error conditions */}
+\PYG{c+cp}{\PYGZsh{}define SD\PYGZus{}WARNING \PYGZdq{}\PYGZlt{}4\PYGZgt{}\PYGZdq{}  }\PYG{c+cm}{/* warning conditions */}
+\PYG{c+cp}{\PYGZsh{}define SD\PYGZus{}NOTICE  \PYGZdq{}\PYGZlt{}5\PYGZgt{}\PYGZdq{}  }\PYG{c+cm}{/* normal but significant condition */}
+\PYG{c+cp}{\PYGZsh{}define SD\PYGZus{}INFO    \PYGZdq{}\PYGZlt{}6\PYGZgt{}\PYGZdq{}  }\PYG{c+cm}{/* informational */}
+\PYG{c+cp}{\PYGZsh{}define SD\PYGZus{}DEBUG   \PYGZdq{}\PYGZlt{}7\PYGZgt{}\PYGZdq{}  }\PYG{c+cm}{/* debug\PYGZhy{}level messages */}
+\end{Verbatim}

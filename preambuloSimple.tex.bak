@@ -38,6 +38,9 @@
 %\usepackage{graphics,graphicx, floatrow} %para incluir imágenes y notas en las imágenes
 \usepackage{graphics,graphicx, float} %para incluir imágenes y colocarlas
 
+%Para incluir codigo
+\usepackage{minted}
+
 % Para hacer tablas comlejas
 %\usepackage{multirow}
 %\usepackage{threeparttable}
