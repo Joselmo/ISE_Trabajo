@@ -1,8 +1,8 @@
 \input{preambuloSimple.tex}
 
-%----------------------------------------------------------------------------------------
+%------------------------------------------------------------------------
 %	TÍTULO Y DATOS DEL ALUMNO
-%----------------------------------------------------------------------------------------
+%------------------------------------------------------------------------
 
 \title{	
 \normalfont \normalsize 
@@ -14,9 +14,9 @@
 
 \date{\normalsize\today} % Incluye la fecha actual
 
-%----------------------------------------------------------------------------------------
+%-------------------------------------------------------------------------
 % DOCUMENTO
-%----------------------------------------------------------------------------------------
+%-------------------------------------------------------------------------
 
 \begin{document}
 
@@ -24,9 +24,9 @@
 
 \newpage
 
-%----------------------------------------------------------------------------------------
+%-------------------------------------------------------------------------
 %	Resumen introductorio (entre 5 y 15 lineas)
-%----------------------------------------------------------------------------------------
+%----------------------------------------------------------------------
 \begin{abstract}
 
 En el mundo de \textit{UNIX} donde el kernel está público y cada vez es más grande la comunidad que lo desarrolla, aparecen nuevas contribuciones para intentar mejorar el sistema. En nuestro caso vamos a analizar una nueva implementación del ``proceso 1'' que rápidamente ha sido adaptada por las principales distribuciones de \textit{UNIX}, \texttt{systemd}, sustituyendo al proceso \texttt{init}. Explicaremos en que consiste tanto \texttt{systemd} como \texttt{init} con sus ventajas e inconvenientes, además examinaremos la implementación de ambos para saber un poco más sobre como funcionan. Por último haremos una conclusión final dando una valoración sobre estos procesos aplicados en el mundo de los servidores.
@@ -35,9 +35,9 @@ En el mundo de \textit{UNIX} donde el kernel está público y cada vez es más g
 
 \end{abstract}
 
-%----------------------------------------------------------------------------------------
+%--------------------------------------------------------------------------
 %	Introducción
-%----------------------------------------------------------------------------------------
+%-------------------------------------------------------------------------
 
 \section{Introducción} % máximo 2 páginas
 Como se indica en la historia de The Open Group \cite{unix}, los sistemas de tipo \textit{UNIX}, concedidos a principios de la década de los 70, se idearon de forma gratuita y libre, fomentando la idea de software libre y de código abierto. Creando así la comunidad tan grande y amplia que conocemos hoy en día. Gracias a esta comunidad se ha seguido desarrollando y avanzando el sistema \textit{UNIX} hasta el kernel de \textit{Linux} que conocemos y utilizamos a diario. Constantemente se están desarrollando nuevas tecnologías y procesos para mejorar este sistema.\\
@@ -50,9 +50,9 @@ Aunque ambos sistemas son daemons (demonios) hay multitud de diferencias entre e
 
 
 
-%----------------------------------------------------------------------------------------
+%--------------------------------------------------------------------------
 %	Init
-%----------------------------------------------------------------------------------------
+%--------------------------------------------------------------------------
 
 \section{Proceso init} % máximo 4 páginas
 El proceso \texttt{init} se caracteriza por su simpleza y facilidad de uso. El funcionamiento de \texttt{init} consiste en ir iniciando los procesos listados en un archivo de configuración, es decir, inicia el primer proceso del listado y cuando éste se ha iniciado inicia el siguiente y así sucesivamente. De esta forma tan simple es como \texttt{init} inicia el sistema. Además utiliza la filosofía del software libre de ser transparente para el usuario y permitirle poder modificar por completo su implementación, ya que basta con modificar el fichero de configuración. De esta forma el proceso \texttt{init} siempre es el padre o antecesor de todo proceso existente en el sistema y además adopta cualquier proceso que pudiera quedarse sin un padre por el motivo que fuera.\\
@@ -64,16 +64,18 @@ Tal como se dice en el artículo de Jonas Gorauskas en ``Linux Jornal'' \cite{Sy
 	
 \subsubsection{Problemas de System V}
 System V presenta una serie de problemas debido a como fue concebido, ya que se pensó para equipos estáticos y que mantenían su hardware, por ello se desarrollo de forma estática y síncrona para el arranque y apagado del sistema, dando lugar a bloqueos de tareas futuras hasta que las actuales no fueran completadas. Esto deja al sistema sin poder reaccionar ante algunos eventos que no estaban programados para el inicio o apagado del sistema. Además no había un control sobre los demonios una vez ejecutados, si estos tenían cualquier problema durante su ejecución no eran tratados por nadie, como mucho si se quedaban huérfanos los recogía el proceso \texttt{init}, pero si se paraban no volvía a lanzarlos aunque fueran procesos importantes o vitales para el sistema.
-%----------------------------------------------------------------------------------------
+%------------------------------------------------------------------------
 %	Systemd
-%----------------------------------------------------------------------------------------
+%-------------------------------------------------------------------------
 
 \section{Proceso systemd} % máximo 4 páginas
 
 Como ya hemos dicho anteriormente \texttt{systemd} fue desarrollado por Lennart Poettering y Kay Sievers, ambos empleados de Red Hat.
-El proceso \texttt{systemd} tal como la definen los autores en la web oficial de \texttt{systemd} \cite{systemd} es una suite o conjunto de herramientas diseñadas para ofrecer una funcionalidad específica, en este caso para facilitar y mejorar el arranque del sistema operativo \textit{Linux}. Específicamente es un conjunto de demonios de \textit{Linux}, un demonio \cite{daemons} es un proceso que funciona en segundo plano en el sistema a la espera de eventos o llamadas que se producen en el sistema y cuando son despertados realizan una tarea concreta. \\
+El proceso \texttt{systemd} tal como la definen los autores en la web oficial de \texttt{systemd} \cite{systemd} es una suite o conjunto de herramientas diseñadas para ofrecer una funcionalidad específica, en este caso para facilitar y mejorar el arranque del sistema operativo \textit{Linux}. Específicamente es un conjunto de demonios de \textit{Linux}, un demonio \cite{daemons} es un proceso que funciona en segundo plano en el sistema a la espera de eventos o llamadas que se producen en el sistema y cuando son despertados realizan una tarea concreta. Systemd no solo ha sustituido al proceso init, sino a toda la gestión que era necesaria para el correcto funcionamiento del inicio del sistema.\\
 
-Systemd no solo ha sustituido al proceso init, sino a toda la gestión que era necesaria para el correcto funcionamiento del inicio del sistema.
+Lennart y Kay diseñaron \texttt{systemd} buscando una mayor eficiencia en el inicio de los sistemas \texttt{Linux}, para ello crearon un \texttt{framework}, un \texttt{framework} en software es una infraestructura estandarizada en resolver un problema especifico, donde poder expresar todas las dependencias y así poder realizar una mejor gestión de las dependencias. Para conseguir una mayor eficiencia se centraron en el paralelismo frente la ejecución de procesos de forma secuencial que utilizaba su predecesor. Ahora \texttt{systemd} realiza todas las llamadas para el inicio del sistema por lo que se ha eliminado la utilización de una terminal como intermediario, ahorrando tiempo en el inicio del sistema. En el \texttt{framework} de dependencias es mucho más permisivo ya que es capaz de controlarlas a un nivel más bajo consiguiendo de esta forma ser mucho más agresivo en la paralelización del inicio del sistema. Además permite al administrador del sistema un mayor control sobre el orden en que se inician los servicios.\\
+
+La resolución de dependencias se fijaron en su problema más fundamental, la utilización de servicios,comunicaciones, otros elementos con otros procesos y  para las comunicaciones se sirven normalmente de los \texttt{sockets}, un \texttt{socket} no es mas que una estructura de datos del sistema de archivos para el intercambio de información entre procesos de un sistema \texttt{Linux}, como indica el manual (man) de \texttt{Linux} \cite{socket}
 
 
 
@@ -83,9 +85,9 @@ Systemd no solo ha sustituido al proceso init, sino a toda la gestión que era n
 \subsection{Implementación}
 
 \section{Conclusiones}
-%----------------------------------------------------------------------------------------
+%-------------------------------------------------------------------------
 %	Conclusiones
-%----------------------------------------------------------------------------------------
+%--------------------------------------------------------------------------
 
 \section{Conclusiones} % maximo 2 
 
