@@ -91,9 +91,10 @@ proceso y además adopta cualquier proceso que pudiera quedarse sin un
 padre por el motivo que fuera.
 
 Pero tenia unos claros inconvenientes derivados de su propia naturaleza
-simple y sencilla, primero de ellos son las dependencias que 
-deben controlarse por parte del programador y que tiene que saber que procesos
-van han de iniciarse primero y cuales después, por ejemplo si en el listado
+simple y sencilla, el primero de ellos son las dependencias que 
+deben controlarse por parte del programador y que tiene que saber las
+dependencias que tienen los procesos y listar primero los procesos que no
+tienen dependencias o cuyas dependencias ya se han resuelto, por ejemplo si en el listado
 de procesos aparece un proceso apache que depende de la configuración de
 red este proceso se iniciará con errores o no se iniciará puesto que el 
 controlador de red todavía no se ha iniciado, aun cuando apache este 
