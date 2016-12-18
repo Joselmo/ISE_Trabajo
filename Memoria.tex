@@ -49,12 +49,6 @@ Este proceso era \texttt{init} que era utilizado por todas las distribuciones ba
 Aunque ambos sistemas son daemons (demonios) hay multitud de diferencias entre ellos, que se explicarán mas adelante y finalmente se hará una conclusión de ambos sistemas de arranque para el mundo de los servidores.
 
 
-%----------------------------------------------------------------------------------------
-%	Historia
-%----------------------------------------------------------------------------------------
-\section{Historia}
-
-
 
 %----------------------------------------------------------------------------------------
 %	Init
@@ -65,6 +59,11 @@ El proceso \texttt{init} se caracteriza por su simpleza y facilidad de uso. El f
 
 Sin embargo presenta unos claros inconvenientes derivados de su propia naturaleza simple y sencilla. El primer inconveniente es el control de las dependencias, ya que deben controlarse por parte del programador y tiene que tener conocimientos de las dependencias que tienen los procesos y listar primero los procesos que no tienen dependencias o cuyas dependencias ya se han resuelto, por ejemplo si en el listado de procesos aparece un proceso apache que depende de la configuración de red este proceso se iniciará con errores o no se iniciará puesto que el controlador de red todavía no se ha iniciado, aún cuando tanto apache como el controlador de red estén perfectamente configurados. El otro inconveniente principal, sobre todo en servidores, es la sobrecarga al inicio del sistema, ya que se inician los procesos de uno en uno y hasta que uno no acabe de arrancar no se inicia el siguiente.
 
+\subsection{System V }
+Tal como se dice en el artículo de Jonas Gorauskas en ``Linux Jornal'' \cite{SysV}, \texttt{System V} fue una versión mejorada del \texttt{init} original y es la que ha estado presente todo este tiempo en las distintas distribuciones de \texttt{Linux}. Aunque esta versión de \texttt{init} sigue utilizando su estructura monolítica y por tanto mantiene el inconveniente del control de dependencia, añadía un sistema de llamadas por niveles de prioridad para la ejecución de los procesos del sistema. Este proceso de llamadas se realiza mediante un esquema de directorios con niveles de ejecución  que contienen los scripts de arranque de los servicios. Dependiendo de la distribución de \texttt{Linux} se utilizan más o menos niveles de prioridad de ejecución.
+	
+\subsubsection{Problemas de System V}
+System V presenta una serie de problemas debido a como fue concebido, ya que se pensó para equipos estáticos y que mantenían su hardware, por ello se desarrollo de forma estática y síncrona para el arranque y apagado del sistema, dando lugar a bloqueos de tareas futuras hasta que las actuales no fueran completadas. Esto deja al sistema sin poder reaccionar ante algunos eventos que no estaban programados para el inicio o apagado del sistema. Además no había un control sobre los demonios una vez ejecutados, si estos tenían cualquier problema durante su ejecución no eran tratados por nadie, como mucho si se quedaban huérfanos los recogía el proceso \texttt{init}, pero si se paraban no volvía a lanzarlos aunque fueran procesos importantes o vitales para el sistema.
 %----------------------------------------------------------------------------------------
 %	Systemd
 %----------------------------------------------------------------------------------------
