@@ -8,7 +8,7 @@
 \normalfont \normalsize 
 \textsc{\textbf{Ingeniería de Servidores (2016-2017)} \\ Grado en Ingeniería Informática \\ Universidad de Granada} \\ [25pt] % Your university, school and/or department name(s)
 \horrule{0.5pt} \\[0.4cm] % Thin top horizontal rule
-\huge systemd \\ % The assignment title
+\huge Systemd \\ % The assignment title
 \horrule{2pt} \\[0.5cm] % Thick bottom horizontal rule
 }
 
@@ -53,27 +53,46 @@ desarrollando y avanzando el sistema \textit{UNIX} hasta el kernel de
 \textit{Linux} que conocemos y utilizamos a diario. Constantemente se están
 desarrollando nuevas tecnologías y procesos para mejorar el sistema.
 
-Nosotros nos vamos a centrar en comparar una nueva versión de unos de los procesos principales del sistema con su predecesora que curiosamente se ha
- mantenido casi intacto 
-desde la década de los noventa, es decir, desde hace más de 20 años no
-ha sido modificado, echo sorprendente pensando en la velocidad que avanza
-siempre la tecnología. El proceso en cuestión es el encargado del inicio 
-del sistema, el proceso con PID (Proccess ID) 1, el arranque del sistema 
-lo hace ejecutando todos los demás procesos como los drivers del adaptador
-de red o del ratón, los controladores de pantalla, etc. 
+Nosotros nos vamos a centrar en comparar una nueva versión de unos de los
+procesos principales del sistema con su predecesora que curiosamente se ha
+mantenido casi intacto desde la década de los noventa, es decir, desde hace
+más de 20 años no ha sido modificada, echo sorprendente pensando en la
+velocidad que avanza siempre la tecnología. El proceso en cuestión es el
+encargado del inicio del sistema, el proceso con PID (Proccess ID) 1 el
+arranque del sistema funciona con un proceso que va ejecutando todos los demás procesos como los drivers del adaptador de red o del ratón, los
+controladores de pantalla, etc. 
 
-Hasta hace relativamente poco todos los sistemas basados en Linux 
-utilizaban en su kernel el proceso \textit{init.d}. Init.d se caracterizaba
-por su simpleza y facilidad de uso. El funcionamiento de init.d consiste
+Este proceso era \textit{init.d} que utilizaban todas las distribuciones
+basadas en Linux. Pero Lennart Poettering, como redacta en su articulo
+\cite{Lennart} y Kay Sievers decidieron desarrollar uno proceso nuevo de
+arranque del sistema, desarrollando así \textit{systemd} el encargado
+de iniciar practicamente todas las distribuciones de Linux actuales.
+
+Aunque ambos sistemas son daemons (demonios) hay multitud de diferencias
+entre ellos, que se explicarán mas adelante y finalmente una conclusión
+de ambos de sistemas de arranque para el mundo de los servidores.
+
+
+
+%----------------------------------------------------------------------------------------
+%	Init
+%----------------------------------------------------------------------------------------
+
+\section{Init} % máximo 4 páginas
+El proceso Init se caracterizaba por su simpleza y facilidad de uso. El funcionamiento de Init consiste
 en ir iniciando los procesos listados en un archivo de configuración, 
-es decir, inicia el primer proceso de la lista y cuando este se ha iniciado
+es decir, inicia el primer proceso de la listado y cuando este se ha iniciado
 inicia el siguiente y así sucesivamente. De esta forma tan simple se
 iniciaba el sistema. Además utiliza la filosofía del software libre de 
 ser transparente para el usuario y permitirle poder modificar por completo
 su implementación, ya que bastaba con modificar el fichero de configuración.
+De esta forma el proceso Init siempre es el padre o antecesor de todo 
+proceso y además adopta cualquier proceso que pudiera quedarse sin un
+padre por el motivo que fuera.
 
-Pero tenia unos claros inconvenientes, primero las dependencias
-deben controlarse por parte del programador que tiene que saber que procesos
+Pero tenia unos claros inconvenientes derivados de su propia naturaleza
+simple y sencilla, primero de ellos son las dependencias que 
+deben controlarse por parte del programador y que tiene que saber que procesos
 van han de iniciarse primero y cuales después, por ejemplo si en el listado
 de procesos aparece un proceso apache que depende de la configuración de
 red este proceso se iniciará con errores o no se iniciará puesto que el 
@@ -83,42 +102,36 @@ problema principal era la sobrecarga al inicio del sistema, ya que se
 iniciaban los procesos de uno en uno y hasta que uno no acabase de arrancar
 no se iniciaba el siguiente.
 
-Por ello Lennart Poettering, como redacta en su articulo \cite{Lennart} y
-Kay Sievers decidieron desarrollar uno proceso nuevo de arranque del
-sistema, desarrollando así \textit{systemd}.
-
-
-
 %----------------------------------------------------------------------------------------
 %	Systemd
 %----------------------------------------------------------------------------------------
 
-\section{Systemd} % máximo 10 páginas
-\subsection{¿Qué es systemd?}
-Tal como la definen los autores en la web oficial de systemd \cite{systemd}
-es una suite o conjunto de herramientas diseñadas para ofrecer una 
-funcionalidad específica, en este caso para facilitar y mejorar el arranque
-del sistema operativo \textit{UNIX}. Específicamente es un conjunto de demonios de \textit{UNIX}, un demonio \cite{daemons} es un proceso que
-funciona en segundo plano en el sistema a la espera de eventos o llamadas
-que se producen en el sistema y cuando son despertados realizan una tarea 
-concreta. 
+\section{Systemd} % máximo 4 páginas
+
+El proceso systemd al como la definen los autores en la web oficial de
+systemd \cite{systemd} es una suite o conjunto de herramientas diseñadas
+para ofrecer una funcionalidad específica, en este caso para facilitar y
+mejorar el arranque del sistema operativo \textit{UNIX}. Específicamente
+es un conjunto de demonios de \textit{UNIX}, un demonio \cite{daemons} es un
+proceso que funciona en segundo plano en el sistema a la espera de eventos
+o llamadas que se producen en el sistema y cuando son despertados realizan
+una tarea  concreta. 
 
 
 
-\subsection{Historia}
+\section{Historia}
 
-\subsubsection{Sobre su creador}
 
 \subsection{Funcionamiento}
 
 \subsection{Implementación}
 
-\subsection{Conclusiones}
+\section{Conclusiones}
 %----------------------------------------------------------------------------------------
 %	Conclusiones
 %----------------------------------------------------------------------------------------
 
-\section{Conclusiones}
+\section{Conclusiones} % maximo 2 
 
 \begin{figure}[H] %con el [H] le obligamos a situar aquí la figura
 \centering
