@@ -60,18 +60,21 @@ El proceso \texttt{init} se caracteriza por su simpleza y facilidad de uso. El f
 Sin embargo presenta unos claros inconvenientes derivados de su propia naturaleza simple y sencilla. El primer inconveniente es el control de las dependencias, ya que deben controlarse por parte del programador y tiene que tener conocimientos de las dependencias que tienen los procesos y listar primero los procesos que no tienen dependencias o cuyas dependencias ya se han resuelto, por ejemplo si en el listado de procesos aparece un proceso apache que depende de la configuración de red este proceso se iniciará con errores o no se iniciará puesto que el controlador de red todavía no se ha iniciado, aún cuando tanto apache como el controlador de red estén perfectamente configurados. El otro inconveniente principal, sobre todo en servidores, es la sobrecarga al inicio del sistema, ya que se inician los procesos de uno en uno y hasta que uno no acabe de arrancar no se inicia el siguiente.
 
 \subsection{System V }
-Tal como se dice en el artículo de Jonas Gorauskas en ``Linux Jornal'' \cite{SysV}, \texttt{System V} fue una versión mejorada del \texttt{init} original y es la que ha estado presente todo este tiempo en las distintas distribuciones de \texttt{Linux}. Aunque esta versión de \texttt{init} sigue utilizando su estructura monolítica y por tanto mantiene el inconveniente del control de dependencia, añadía un sistema de llamadas por niveles de prioridad para la ejecución de los procesos del sistema. Este proceso de llamadas se realiza mediante un esquema de directorios con niveles de ejecución  que contienen los scripts de arranque de los servicios. Dependiendo de la distribución de \texttt{Linux} se utilizan más o menos niveles de prioridad de ejecución.
-	
-\subsubsection{Problemas de System V}
-System V presenta una serie de problemas debido a como fue concebido, ya que se pensó para equipos estáticos y que mantenían su hardware, por ello se desarrollo de forma estática y síncrona para el arranque y apagado del sistema, dando lugar a bloqueos de tareas futuras hasta que las actuales no fueran completadas. Esto deja al sistema sin poder reaccionar ante algunos eventos que no estaban programados para el inicio o apagado del sistema. Además no había un control sobre los demonios una vez ejecutados, si estos tenían cualquier problema durante su ejecución no eran tratados por nadie, como mucho si se quedaban huérfanos los recogía el proceso \texttt{init}, pero si se paraban no volvía a lanzarlos aunque fueran procesos importantes o vitales para el sistema.
+Tal como se dice en el artículo de Jonas Gorauskas en ``Linux Jornal'' \cite{SysV}, \texttt{System V} fue una versión mejorada del \texttt{init} original y es la que ha estado presente todo este tiempo en las distintas distribuciones de \texttt{Linux}. Aunque esta versión de \texttt{init} sigue utilizando su estructura monolítica y por tanto mantiene el inconveniente del control de dependencia, añadía un sistema de llamadas por niveles de prioridad para la ejecución de los procesos del sistema. Este proceso de llamadas se realiza mediante un esquema de directorios con niveles de ejecución  que contienen los scripts de arranque de los servicios. Dependiendo de la distribución de \texttt{Linux} se utilizan más o menos niveles de prioridad de ejecución.\\
+
+
+Como se puede observar en la figura \ref{fig:System_V} el proceso de arranque del sistema empieza en las BIOS, continuando por la llamada al GRUB que seleccionando un sistema operativo carga el Kernel. En el caso de sistemas Linux con \texttt{System V init} primero leería el fichero de configuración inittab, en el cual se indica el esquema que debe seguir los niveles de ejecución del proceso. En este caso hemos utilizado de ejemplo un sistema con 5 niveles.
 
 \begin{figure}[H] %con el [H] le obligamos a situar aquí la figura
 \centering
-\includegraphics[scale=0.4]{./imagenes/System_V.png} 
+\includegraphics[scale=0.38]{./imagenes/System_V.png} 
 \caption{System V - boot process} \label{fig:System_V}
 \end{figure}
 
-Como se puede observar en la figura \ref{fig:System_V} el proceso de arranque del sistema empieza en las BIOS, continuando por la llamada al GRUB que seleccionando un sistema operativo carga el Kernel. En el caso de sistemas Linux con \texttt{System V init} primero leería el fichero de configuración inittab, en el cual se indica el esquema que debe seguir los niveles de ejecución del proceso. En este caso hemos utilizado de ejemplo un sistema con 5 niveles.
+
+
+\subsubsection{Problemas de System V}
+System V presenta una serie de problemas debido a como fue concebido, ya que se pensó para equipos estáticos y que mantenían su hardware, por ello se desarrollo de forma estática y síncrona para el arranque y apagado del sistema, dando lugar a bloqueos de tareas futuras hasta que las actuales no fueran completadas. Esto deja al sistema sin poder reaccionar ante algunos eventos que no estaban programados para el inicio o apagado del sistema. Además no había un control sobre los demonios una vez ejecutados, si estos tenían cualquier problema durante su ejecución no eran tratados por nadie, como mucho si se quedaban huérfanos los recogía el proceso \texttt{init}, pero si se paraban no volvía a lanzarlos aunque fueran procesos importantes o vitales para el sistema.
 %------------------------------------------------------------------------
 %	Systemd
 %-------------------------------------------------------------------------
@@ -177,7 +180,7 @@ Además se complica considerablemente las funciones del administrador del sistem
 
 Por lo tanto podemos decir que en ordenadores de ámbito personal o domésticos se puede considerar una ventaja utilizar systemd en vez de init, ya que para el usuario estándar, el cual le da un uso normal al sistema, es preferible un inicio más rápido y una mayor abstracción de la administración del sistema teniéndolo todo unificado, como ya hacen el resto de los sistemas operativos modernos, como son Windows o Mac.\\
 
-Sin embargo justo estas ventajas en usuarios estándar son los inconvenientes
+Sin embargo justo estas ventajas en usuarios estándar son los inconvenientes en el mundo de los servidores, donde la tendencia son los sistemas distribuidos con una compleja administración.
 
 
 
