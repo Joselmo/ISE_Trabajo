@@ -38,3 +38,28 @@
 	note = {Blog de Lennart}
 }
 
+
+@misc{socket,
+	title = "\url{http://man7.org/linux/man-pages/man7/unix.7.html}",
+	year = "consultado el 14 de Diciembre de 2016",
+	note = {Man de Linux}
+}
+
+
+@misc{systemd_es,
+	title = "\url{https://wiki.archlinux.org/index.php/systemd_(Espa%C3%B1ol)}",
+	year = "consultado el 14 de Diciembre de 2016",
+	note = {Archlinux Wiki}
+}
+
+@misc{suse_doc,
+	title = "\url{https://www.suse.com/docrep/documents/huz0a6bf9a/systemd_in_suse_linux_enterprise_12_white_paper.pdf}",
+	year = "consultado el 14 de Diciembre de 2016",
+	note = {Documentaciión de SUSE enterprise.}
+}
+
+@misc{Journald,
+	title = "\url{http://0pointer.de/blog/projects/systemctl-journal.html}",
+	year = "consultado el 14 de Diciembre de 2016",
+	note = {Blog de Lennart}
+}
